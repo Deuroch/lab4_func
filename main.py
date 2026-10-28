@@ -48,7 +48,7 @@ def process_csv(file_path: str) -> list[dict[str, Any]]:
     
     # map: увеличиваем зарплату на 10%
     def transform(d: dict[str, Any]) -> dict[str, Any]:
-        d['salary'] = float(d['salary']) * 1.1
+        d['salary'] = round(float(d['salary']) * 1.1, 2)
         return d
         
     return list(map(transform, filtered_data))
