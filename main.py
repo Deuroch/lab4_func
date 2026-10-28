@@ -52,3 +52,43 @@ def process_csv(file_path: str) -> list[dict[str, Any]]:
         return d
         
     return list(map(transform, filtered_data))
+
+
+def compose(*funcs: Callable) -> Callable:
+    """Возвращает композицию переданных функций: compose(f, g)(x) = f(g(x))."""
+    def inner(arg: Any) -> Any:
+        return reduce(lambda val, func: func(val), reversed(funcs), arg)
+    return inner
+
+
+if __name__ == "__main__":
+    # Тест 1: Декоратор
+    @time_it
+    def dummy_sleep() -> str:
+        time.sleep(0.1)
+        return "ok"
+    
+    assert dummy_sleep() == "ok"
+
+    # Тест 2: map функций
+    f1 = lambda x: x * 2
+    f2 = lambda x: x ** 2
+    assert apply_multiple_funcs([f1, f2], [1, 2, 3]) == [[2, 4, 6], [1, 4, 9]]
+
+    # Тест 3: факториал reduce
+    assert factorial_reduce(5) == 120
+    assert factorial_reduce(0) == 1
+
+    # Тест 4: CSV
+    csv_result = process_csv("data.csv")
+    assert len(csv_result) == 2  # Alice и Charlie
+    assert csv_result[0]['name'] == 'Alice'
+    assert csv_result[0]['salary'] == 110000.0  # Теперь сойдется ровно
+
+    # Тест 5: композиция (f(g(x)))
+    add_one = lambda x: x + 1
+    multiply_by_two = lambda x: x * 2
+    composed_func = compose(add_one, multiply_by_two)
+    assert composed_func(3) == 7
+
+    print("Все тесты успешно пройдены!")
