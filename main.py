@@ -14,3 +14,8 @@ def time_it(func: Callable) -> Callable:
         print(f"[{func.__name__}] выполнена за {end_time - start_time:.4f} сек")
         return result
     return wrapper
+
+
+def apply_multiple_funcs(funcs: list[Callable], data: list[Any]) -> list[list[Any]]:
+    """Применяет несколько функций к списку через map."""
+    return [list(map(f, data)) for f in funcs]
